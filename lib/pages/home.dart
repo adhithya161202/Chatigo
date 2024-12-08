@@ -15,6 +15,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   bool search = false;
   String ?myName,myProfilePic, myUserName, myEmail;
+  Stream? chatRoomsStream;
 
   getthesharedpref()async{
     myName =await SharedPreferenceHelper().getUserDisplayName();
@@ -28,10 +29,27 @@ class _HomeState extends State<Home> {
 
   ontheload()async{
     await getthesharedpref();
+    chatRoomsStream=await DatabaseMethods().getChatRooms();
     setState(() {
       
     });
  }
+
+ Widget ChatRoomList(){
+  return StreamBuilder(stream:chatRoomsStream,
+  builder: (context,AsyncSnapshot  snapshot){
+      return snapshot.hasData?ListView.builder(
+        padding: EdgeInsets.zero,
+        itemCount: snapshot.data.docs.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index){
+        DocumentSnapshot ds=snapshot.data.doc.length;
+        return _ChatRoomListTile(chatRoomId: ds.id, lastMessage: ds["lastMessage"], myUserName: myUserName!, time: ds["lastMessageSendTs"]);
+
+      }):Center(child: CircularProgressIndicator(),);
+  });
+ }
+
 
  @override
  void initState(){
@@ -78,35 +96,35 @@ initiateChat(String myUserName, String otherUserName) async {
       });
 
       var capitalizedValue = value.substring(0, 1).toUpperCase() + value.substring(1);
-    //if (queryResultSet.isEmpty && value.length == 1) {
-      if (queryResultSet.isEmpty ) {
+    if (queryResultSet.isEmpty && value.length == 1) {
+      //if (queryResultSet.isEmpty ) {
         DatabaseMethods().Search(value).then((QuerySnapshot docs) {
           setState(() {
-            // for (int i = 0; i < docs.docs.length; ++i) {
-            //   queryResultSet.add(docs.docs[i].data());
-            // }
-             queryResultSet = docs.docs.map((doc) => doc.data()).toList();
-          tempSearchStore = queryResultSet.where((element) {
-            return element['username'].toString().startsWith(capitalizedValue);
-          }).toList();
+            for (int i = 0; i < docs.docs.length; ++i) {
+              queryResultSet.add(docs.docs[i].data());
+            }
+          //    queryResultSet = docs.docs.map((doc) => doc.data()).toList();
+          // tempSearchStore = queryResultSet.where((element) {
+          //   return element['username'].toString().startsWith(capitalizedValue);
+          // }).toList();
           });
 
         });
       } else {
         tempSearchStore = [];
         queryResultSet.forEach((element) {
-          // if (element['username'].toString().startsWith(capitalizedValue)) {
-          //   setState(() {
-          //     tempSearchStore.add(element);
-          //   });
-          // }
-        //});
-         setState(() {
-        tempSearchStore = queryResultSet.where((element) {
-          return element['username'].toString().startsWith(capitalizedValue);
-        }).toList();
-      });
-      });
+          if (element['username'].toString().startsWith(capitalizedValue)) {
+            setState(() {
+              tempSearchStore.add(element);
+            });
+          }
+        });
+      //    setState(() {
+      //   tempSearchStore = queryResultSet.where((element) {
+      //     return element['username'].toString().startsWith(capitalizedValue);
+      //   }).toList();
+      // });
+      
     }
   }
   }
@@ -188,6 +206,8 @@ initiateChat(String myUserName, String otherUserName) async {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
               width: MediaQuery.of(context).size.width,
+              height: search? MediaQuery.of(context).size.height/1.9
+              :MediaQuery.of(context).size.height/1.2,
               decoration: const BoxDecoration(
                 color: Color.fromRGBO(248, 253, 237, 1),
                 borderRadius: BorderRadius.only(
@@ -195,83 +215,22 @@ initiateChat(String myUserName, String otherUserName) async {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: search
-                  ? ListView(
-                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                      children: tempSearchStore.map((element) {
-                        return buildResultCard(element);
-                      }).toList(),
-                    )
-                  : Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                           
-                          },
-                          child: userCard("Adhithya", "Hello what are you doing?", "04:30"),
-                        ),
-                        const SizedBox(height: 20.0),
-                        userCard("Adhithya", "Hello what are you doing?", "04:30"),
-                      ],
-                    ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget userCard(String name, String message, String time) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(60),
-          child: Image.asset(
-            "images/mess3.png",
-            height: 70,
-            width: 70,
-            fit: BoxFit.cover,
-          ),
-        ),
-        const SizedBox(width: 10.0),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
                 children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    time,
-                    style: const TextStyle(
-                      color: Colors.black45,
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  search
+                      ? ListView(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          children: tempSearchStore.map((element) {
+                            return buildResultCard(element);
+                          }).toList(),
+                        )
+                      : ChatRoomList(),
                 ],
               ),
-              Text(
-                message,
-                style: const TextStyle(
-                  color: Colors.black45,
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ),
         ),
+          )
       ],
+      )
     );
   }
 
@@ -341,6 +300,99 @@ initiateChat(String myUserName, String otherUserName) async {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _ChatRoomListTile extends StatefulWidget {
+  final String lastMessage ,chatRoomId,myUserName,time;
+
+  _ChatRoomListTile({required this.chatRoomId,required this.lastMessage,required this.myUserName,required this.time});
+
+  @override
+  State<_ChatRoomListTile> createState() => __ChatRoomListTileState();
+}
+
+class __ChatRoomListTileState extends State<_ChatRoomListTile> {
+  String profileUrl="" ,name="",username="",id="";
+
+  getthisUserInfo()async{
+    username= widget.chatRoomId.replaceAll("_", "").replaceAll(widget.myUserName,"");
+    QuerySnapshot querySnapshot=await DatabaseMethods().getUserInfo(username.toUpperCase());
+    name="${querySnapshot.docs[0]["Name"]}";
+    profileUrl="${querySnapshot.docs[0]["photo"]}";
+    id="${querySnapshot.docs[0]["Id"]}";
+    setState(() {
+      
+    });
+  }
+  @override
+  void initState(){
+    getthisUserInfo();
+    super.initState();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.0,vertical: 20.0),
+      child:  Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            profileUrl==""?CircularProgressIndicator():
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(60),
+                              child: Image.asset(
+                                profileUrl,
+                                height: 70,
+                                width: 70,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            SizedBox(width: 10.0),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        username,
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                    widget.lastMessage,
+                                    style: TextStyle(
+                                      color: Colors.black45,
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                      Text(
+                                        widget.time,
+                                        style: TextStyle(
+                                          color: Colors.black45,
+                                          fontSize: 14.0,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  // SizedBox(height: 5.0),
+                                  
+                                ],
+                    ),
+                 )
+              ]
+         )
+
     );
   }
 }

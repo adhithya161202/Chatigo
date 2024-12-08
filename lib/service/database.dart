@@ -1,3 +1,4 @@
+import 'package:chatapp/service/shared_pref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -53,12 +54,17 @@ Future addMessage(String chatRoomId,String messageId,Map<String,dynamic>messageI
   .set(messageInfoMap);
 
 }
+
+
  updateLastMessageSend(String chatRoomId,Map<String,dynamic>lastMessageInfoMap)async{
   return FirebaseFirestore.instance
   .collection("chatrooms")
   .doc(chatRoomId)
   .update(lastMessageInfoMap);
  }
+
+
+
 
   Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId)async{
     return FirebaseFirestore.instance
@@ -70,7 +76,22 @@ Future addMessage(String chatRoomId,String messageId,Map<String,dynamic>messageI
   }
 
 
+  Future<QuerySnapshot> getUserInfo(String username)async{
+    return await FirebaseFirestore.instance
+    .collection("users")
+    .where("username",isEqualTo:username)
+    .get();
+  }
 
+
+  Future<Stream<QuerySnapshot>>getChatRooms()async{
+    String? myUserName=await SharedPreferenceHelper().getUserName();
+    return FirebaseFirestore.instance
+    .collection("chatroms")
+    .orderBy("time",descending: true)
+    .where("users",arrayContains: myUserName!.toUpperCase())
+    .snapshots();
+  }
 
 
 

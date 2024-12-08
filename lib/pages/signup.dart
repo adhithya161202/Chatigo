@@ -49,7 +49,7 @@ class _SignupState extends State<Signup> {
         await SharedPreferenceHelper().saveUserId(id);
         await SharedPreferenceHelper().saveUserDisplayName(namecontroller.text);
         await SharedPreferenceHelper().saveUserEmail(mailcontroller.text);
-        await SharedPreferenceHelper().saveUserName(updateusername.toUpperCase());
+        await SharedPreferenceHelper().saveUserName(mailcontroller.text.replaceAll("@gmail.com", "").toUpperCase());
        // await SharedPreferenceHelper().saveSearchKey(firstletter);
         await SharedPreferenceHelper().saveUserPic(
             "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");

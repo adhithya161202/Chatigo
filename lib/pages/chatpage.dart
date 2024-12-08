@@ -175,7 +175,7 @@ getAndSetMessages()async{
                             fontSize: 23.0,
                             fontWeight: FontWeight.w500,
                           ),
-                                           ),
+                        ),
                        ],
                      ),
                    ),
@@ -186,11 +186,15 @@ getAndSetMessages()async{
                     Container(
                       alignment: Alignment.bottomCenter,
                       child: Material(
-                        elevation: 5.0,
+                        elevation: 10.0,
                         borderRadius: BorderRadius.circular(10),
+                        
                         child: Container(
                           margin: EdgeInsets.only(left:20.0 ,right: 20.0,bottom: 10.0),
                           decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(blurRadius:10.0,color: Colors.black.withOpacity(0.3)),
+                            ],
                             color: const Color.fromARGB(255, 255, 255, 255),
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -206,8 +210,8 @@ getAndSetMessages()async{
                                       border: InputBorder.none,
                                       hintText: "Type a message",
                                       hintStyle: TextStyle(color: Colors.grey),
-                                      suffixIcon: GestureDetector
-                                      (
+                                      suffixIcon: 
+                                      GestureDetector(
                                         onTap: (){
                                           addMessage(true);
                                         },  
