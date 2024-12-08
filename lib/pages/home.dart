@@ -1,7 +1,9 @@
 import 'package:chatapp/pages/chatpage.dart';
 import 'package:chatapp/service/database.dart';
+import 'package:chatapp/service/shared_pref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -12,6 +14,55 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   bool search = false;
+  String ?myName,myProfilePic, myUserName, myEmail;
+
+  getthesharedpref()async{
+    myName =await SharedPreferenceHelper().getUserDisplayName();
+    myProfilePic=await SharedPreferenceHelper().getUserPic();
+    myUserName=await SharedPreferenceHelper().getUserName();
+    myEmail=await SharedPreferenceHelper().getUserEmail();
+    setState(() {
+      
+    });
+  }
+
+  ontheload()async{
+    await getthesharedpref();
+    setState(() {
+      
+    });
+ }
+
+ @override
+ void initState(){
+  super.initState();
+  ontheload();
+ }
+
+initiateChat(String myUserName, String otherUserName) async {
+  String chatRoomId = getChatRoomIdbyUsername(myUserName, otherUserName);
+
+  Map<String, dynamic> chatRoomInfoMap = {
+    "users": [myUserName, otherUserName],
+    "createdAt": FieldValue.serverTimestamp(),
+  };
+
+  await DatabaseMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
+}
+
+
+  String getChatRoomIdbyUsername(String a, String b) {
+  // Sort usernames alphabetically to ensure consistency.
+  //if (a.compareTo(b) > 0) {
+   if(a.substring(0,1).codeUnitAt(0)>b.substring(0,1).codeUnitAt(0)){
+    return "$b\_$a"; // Correct way to generate the chat room ID with even segments
+  } else {
+    return "$a\_$b"; // Ensure it's always consistent
+  }
+}
+
+
+
   var queryResultSet = [];
   var tempSearchStore = [];
 
@@ -27,36 +78,37 @@ class _HomeState extends State<Home> {
       });
 
       var capitalizedValue = value.substring(0, 1).toUpperCase() + value.substring(1);
-    if (queryResultSet.isEmpty && value.length == 1) {
-      //if (queryResultSet.isEmpty ) {
+    //if (queryResultSet.isEmpty && value.length == 1) {
+      if (queryResultSet.isEmpty ) {
         DatabaseMethods().Search(value).then((QuerySnapshot docs) {
           setState(() {
-            for (int i = 0; i < docs.docs.length; ++i) {
-              queryResultSet.add(docs.docs[i].data());
-            }
-          //    queryResultSet = docs.docs.map((doc) => doc.data()).toList();
-          // tempSearchStore = queryResultSet.where((element) {
-          //   return element['username'].toString().startsWith(capitalizedValue);
-          // }).toList();
+            // for (int i = 0; i < docs.docs.length; ++i) {
+            //   queryResultSet.add(docs.docs[i].data());
+            // }
+             queryResultSet = docs.docs.map((doc) => doc.data()).toList();
+          tempSearchStore = queryResultSet.where((element) {
+            return element['username'].toString().startsWith(capitalizedValue);
+          }).toList();
           });
 
         });
       } else {
         tempSearchStore = [];
         queryResultSet.forEach((element) {
-          if (element['username'].toString().startsWith(capitalizedValue)) {
-            setState(() {
-              tempSearchStore.add(element);
-            });
-          }
-        });
-      //    setState(() {
-      //   tempSearchStore = queryResultSet.where((element) {
-      //     return element['username'].toString().startsWith(capitalizedValue);
-      //   }).toList();
-      // });
-      }
+          // if (element['username'].toString().startsWith(capitalizedValue)) {
+          //   setState(() {
+          //     tempSearchStore.add(element);
+          //   });
+          // }
+        //});
+         setState(() {
+        tempSearchStore = queryResultSet.where((element) {
+          return element['username'].toString().startsWith(capitalizedValue);
+        }).toList();
+      });
+      });
     }
+  }
   }
 
   @override
@@ -154,10 +206,7 @@ class _HomeState extends State<Home> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const Chatpage()),
-                            );
+                           
                           },
                           child: userCard("Adhithya", "Hello what are you doing?", "04:30"),
                         ),
@@ -227,42 +276,68 @@ class _HomeState extends State<Home> {
   }
 
   Widget buildResultCard(data) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(10),
-        child: Container(
-          padding: const EdgeInsets.all(18.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    data["Name"],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
+    return GestureDetector(
+      onTap: ()async{
+       
+        setState(() {
+          
+        });
+        var ChatRoomId=getChatRoomIdbyUsername(myUserName!, data["username"]);
+        Map<String, dynamic> chatRoomInfoMap ={
+          "users":[myUserName,data["username"]],
+        };
+
+       await DatabaseMethods().createChatRoom(ChatRoomId, chatRoomInfoMap);
+        //await initiateChat(myUserName!, data["username"]);
+
+         Navigator.push(context,MaterialPageRoute(builder: 
+         (context) =>  Chatpage(name: data["Name"],profileurl: data["photo"],username: data["username"],
+         )));
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: Material(
+          elevation: 5.0,
+          borderRadius: BorderRadius.circular(10),
+          child: Container(
+            padding: const EdgeInsets.all(18.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(60),
+                child: Image.network(data["photo"],
+                height: 50.0,width: 50.0,fit: BoxFit.cover,
+                )
+                ),
+                SizedBox(width: 20.0,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data["Name"],
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  Text(
-                    data["username"],
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 5.0),
+                    Text(
+                      data["username"],
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
