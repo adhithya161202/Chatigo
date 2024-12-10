@@ -66,33 +66,66 @@ Future addMessage(String chatRoomId,String messageId,Map<String,dynamic>messageI
 
 
 
-  Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId)async{
-    return FirebaseFirestore.instance
-    .collection("chatrooms")
-    .doc(chatRoomId)
-    .collection("chats")
-    .orderBy("time",descending: true)
-    .snapshots();
+  // Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId)async{
+  //   return FirebaseFirestore.instance
+  //   .collection("chatrooms")
+  //   .doc(chatRoomId)
+  //   .collection("chats")
+  //   .orderBy("time",descending: true)
+  //   .snapshots();
+  // }
+    Future<Stream<QuerySnapshot>> getChatRoomMessages(chatRoomId) async {
+    try {
+      return FirebaseFirestore.instance
+          .collection("chatrooms")
+          .doc(chatRoomId)
+          .collection("chats")
+          .orderBy("time", descending: true)
+          .snapshots();
+    } catch (e) {
+      print("Error in getChatRoomMessages: $e");
+      rethrow;
+    }
   }
 
 
-  Future<QuerySnapshot> getUserInfo(String username)async{
-    return await FirebaseFirestore.instance
-    .collection("users")
-    .where("username",isEqualTo:username)
-    .get();
+  // Future<QuerySnapshot> getUserInfo(String username)async{
+  //   return await FirebaseFirestore.instance
+  //   .collection("users")
+  //   .where("username",isEqualTo:username)
+  //   .get();
+  // }
+    Future<QuerySnapshot> getUserInfo(String username) async {
+    try {
+      return await FirebaseFirestore.instance.collection("users").where("username", isEqualTo: username).get();
+    } catch (e) {
+      print("Error in getUserInfo: $e");
+      rethrow;
+    }
   }
 
 
-  Future<Stream<QuerySnapshot>>getChatRooms()async{
-    String? myUserName=await SharedPreferenceHelper().getUserName();
-    return FirebaseFirestore.instance
-    .collection("chatroms")
-    .orderBy("time",descending: true)
-    .where("users",arrayContains: myUserName!.toUpperCase())
-    .snapshots();
+  // Future<Stream<QuerySnapshot>>getChatRooms()async{
+  //   String? myUserName=await SharedPreferenceHelper().getUserName();
+  //   return FirebaseFirestore.instance
+  //   .collection("chatrooms")
+  //   .where("users",arrayContains: myUserName!)
+  //   .orderBy("time",descending: true)
+  //   .snapshots();
+  // }
+ Future<Stream<QuerySnapshot>> getChatRooms() async {
+    try {
+      String? myUserName = await SharedPreferenceHelper().getUserName();
+      return FirebaseFirestore.instance
+          .collection("chatrooms")
+          .where("users", arrayContains: myUserName!)
+          .orderBy("lastMessageSendTs", descending: true) // Ensure this field exists
+          .snapshots();
+    } catch (e) {
+      print("Error in getChatRooms: $e");
+      rethrow;
+    }
   }
-
 
 
 }
