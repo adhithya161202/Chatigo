@@ -3,6 +3,7 @@ import 'package:chatapp/pages/forgotpassword.dart';
 import 'package:chatapp/pages/home.dart';
 import 'package:chatapp/pages/signin.dart';
 import 'package:chatapp/pages/signup.dart';
+import 'package:chatapp/service/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home:Signup(),
+      home:FutureBuilder(future: AuthMethods().getCurrentUser() ,builder: (context,AsyncSnapshot<dynamic> snapshot){
+        if(snapshot.hasData){
+          return Home();
+        }
+        else{
+          return Signup();
+        }
+      })
     );
   }
 }

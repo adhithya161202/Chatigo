@@ -35,20 +35,6 @@ class _HomeState extends State<Home> {
     });
  }
 
-//  Widget ChatRoomList(){
-//   return StreamBuilder(stream:chatRoomsStream,
-//   builder: (context,AsyncSnapshot  snapshot){
-//       return snapshot.hasData?ListView.builder(
-//         padding: EdgeInsets.zero,
-//         itemCount: snapshot.data.docs.length,
-//         shrinkWrap: true,
-//         itemBuilder: (context, index){
-//         DocumentSnapshot ds=snapshot.data.doc.length;
-//         return _ChatRoomListTile(chatRoomId: ds.id, lastMessage: ds["lastMessage"], myUserName: myUserName!, time: ds["lastMessageSendTs"]);
-
-//       }):Center(child: CircularProgressIndicator(),);
-//   });
-//  }
 
 //updated 
 // Widget ChatRoomList() {
@@ -122,16 +108,6 @@ initiateChat(String myUserName, String otherUserName) async {
   await DatabaseMethods().createChatRoom(chatRoomId, chatRoomInfoMap);
 }
 
-
-//   String getChatRoomIdbyUsername(String a, String b) {
-//   // Sort usernames alphabetically to ensure consistency.
-//   //if (a.compareTo(b) > 0) {
-//    if(a.substring(0,1).codeUnitAt(0)>b.substring(0,1).codeUnitAt(0)){
-//     return "$b\_$a"; // Correct way to generate the chat room ID with even segments
-//   } else {
-//     return "$a\_$b"; // Ensure it's always consistent
-//   }
-// }
 String getChatRoomIdbyUsername(String a, String b) {
   List<String> users = [a, b];
   users.sort();
@@ -143,51 +119,6 @@ String getChatRoomIdbyUsername(String a, String b) {
   var queryResultSet = [];
   var tempSearchStore = [];
 
-//   initiateSearch(String value) {
-//     if (value.isEmpty) {
-//       setState(() {
-//         queryResultSet = [];
-//         tempSearchStore = [];
-//       });
-//     } else {
-//       setState(() {
-//         search = true;
-//       });
-
-//       var capitalizedValue = value.substring(0, 1).toUpperCase() + value.substring(1);
-//     if (queryResultSet.isEmpty && value.length == 1) {
-//       //if (queryResultSet.isEmpty ) {
-//         DatabaseMethods().Search(value).then((QuerySnapshot docs) {
-//           setState(() {
-//             for (int i = 0; i < docs.docs.length; ++i) {
-//               queryResultSet.add(docs.docs[i].data());
-//             }
-//             ////
-//              queryResultSet = docs.docs.map((doc) => doc.data()).toList();
-//           tempSearchStore = queryResultSet.where((element) {
-//             return element['username'].toString().startsWith(capitalizedValue);
-//           }).toList();
-//           });
-// /////
-//         });
-//       } else {
-//         tempSearchStore = [];
-//         queryResultSet.forEach((element) {
-//           if (element['username'].toString().startsWith(capitalizedValue)) {
-//             setState(() {
-//               tempSearchStore.add(element);
-//             });
-//           }
-//         });
-//       //    setState(() {
-//       //   tempSearchStore = queryResultSet.where((element) {
-//       //     return element['username'].toString().startsWith(capitalizedValue);
-//       //   }).toList();
-//       // });
-      
-//     }
-//   }
-//   }
 initiateSearch(String value) {
   if (value.isEmpty) {
     setState(() {
@@ -428,160 +359,7 @@ class __ChatRoomListTileState extends State<_ChatRoomListTile> {
   }
 
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-//       padding: const EdgeInsets.all(10.0),
-//       // decoration: BoxDecoration(
-//       //   color: Colors.white,
-//       //   borderRadius: BorderRadius.circular(10),
-//       //   boxShadow: const [
-//       //     BoxShadow(
-//       //       color: Colors.black12,
-//       //       blurRadius: 4,
-//       //       offset: Offset(0, 2),
-//       //     ),
-//       //   ],
-//       // ),
-//     //  margin: EdgeInsets.symmetric(horizontal: 10.0,vertical: 100.0),
-//       child:  Row(
-//                           crossAxisAlignment: CrossAxisAlignment.center,
-//                           children: [
-//                             profileUrl==""?CircularProgressIndicator():
-//                             ClipRRect(
-//                               borderRadius: BorderRadius.circular(40),
-//                               child: Image.network(
-//                                 profileUrl,
-//                                 height: 50,
-//                                 width: 50,
-//                                 fit: BoxFit.cover,
-//                               ),
-//                             ),
-                        
-//                             SizedBox(width: 10.0,),
-                            
-//                             Expanded(
-//                               child: Column(
-//                                 crossAxisAlignment: CrossAxisAlignment.start,
-//                                 children: [
-//                                   Text(
-//                                     username,
-//                                     style: TextStyle(
-//                                       color: Colors.black,
-//                                       fontSize: 16.0,
-//                                       fontWeight: FontWeight.bold,
-//                                     ),
-//                                   ),
-//                                  // SizedBox(height: 5.0,),
-//                                   Container(
-//                                     width: MediaQuery.of(context).size.width/2.5,
-//                                     child: Text(
-//                                                 widget.lastMessage,
-//                                                 overflow: TextOverflow.ellipsis,
-//                                                 style: TextStyle(
-//                                     color: Colors.black45,
-//                                     fontSize: 14.0,
-//                                     fontWeight: FontWeight.w500,
-//                                       ),
-//                                     ),
-//                                   ),
-//                                   const SizedBox(width: 10.0),                               
-//                                   Text(
-//                                     widget.time,
-//                                     style: TextStyle(
-//                                       color: Colors.black45,
-//                                       fontSize: 12.0,
-//                                       fontWeight: FontWeight.w500,
-//                                     ),
-//                                   ),
-//                                   // SizedBox(height: 5.0),
-                                  
-//                                 ],
-//                     ),
-//                  )
-//               ]
-//          )
 
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       // margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-//        padding: const EdgeInsets.all(10.0),
-//       // decoration: BoxDecoration(
-//       //   color: Colors.white,
-//       //   borderRadius: BorderRadius.circular(10),
-//       //   boxShadow: const [
-//       //     BoxShadow(
-//       //       color: Colors.black12,
-//       //       blurRadius: 4,
-//       //       offset: Offset(0, 2),
-//       //     ),
-//       //   ],
-//       // ),
-//       child: Row(
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           // Profile Picture
-//           profileUrl == ""
-//               ? const CircularProgressIndicator()
-//               : ClipRRect(
-//                   borderRadius: BorderRadius.circular(40),
-//                   child: Image.network(
-//                     profileUrl,
-//                     height: 50,
-//                     width: 50,
-//                     fit: BoxFit.cover,
-//                   ),
-//                 ),
-//           const SizedBox(width: 15.0),
-//           // Chat Details
-//           Expanded(
-//             child: Column(
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 // Username
-//                 Text(
-//                   name.isNotEmpty ? name : username,
-//                   style: const TextStyle(
-//                     color: Colors.black,
-//                     fontSize: 16.0,
-//                     fontWeight: FontWeight.bold,
-//                   ),
-//                 ),
-//                // const SizedBox(height: 5.0),
-              
-
-//                 SizedBox(
-//                   width: MediaQuery.of(context).size.width/2.5,
-//                   child: Text(
-//                     widget.lastMessage,
-//                     overflow: TextOverflow.ellipsis,
-//                     style: const TextStyle(
-//                       color: Colors.black54,
-//                       fontSize: 14.0,
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           const SizedBox(width: 10.0),
-//           // Timestamp
-//           Text(
-//             widget.time,
-//             style: const TextStyle(
-//               color: Colors.black45,
-//               fontSize: 12.0,
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
 @override
 Widget build(BuildContext context) {
   
@@ -602,24 +380,7 @@ Widget build(BuildContext context) {
         ),
       );
     },
-    // onTap: ()async{
-       
-    //     setState(() {
-          
-    //     });
-    //     var ChatRoomId=getChatRoomIdbyUsername(myUserName!, data["username"]);
-    //     Map<String, dynamic> chatRoomInfoMap ={
-    //       "users":[myUserName,data["username"]],
-    //     };
-
-    //    await DatabaseMethods().createChatRoom(ChatRoomId, chatRoomInfoMap);
-    //     //await initiateChat(myUserName!, data["username"]);
-
-    //      Navigator.push(context,MaterialPageRoute(builder: 
-    //      (context) =>  Chatpage(name: data["Name"],profileurl: data["photo"],username: data["username"],
-    //      )));
-    //   },
-
+   
     child: Container(
        margin: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
       decoration: BoxDecoration(
