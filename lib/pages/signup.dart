@@ -104,171 +104,174 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: Stack(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height / 4.0,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    const Color.fromARGB(255, 174, 176, 39),
-                    const Color.fromARGB(255, 18, 153, 137),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.vertical(
-                  bottom: Radius.elliptical(
-                      MediaQuery.of(context).size.width, 160),
+      resizeToAvoidBottomInset: true,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Stack(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height / 4.0,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color.fromARGB(255, 174, 176, 39),
+                      const Color.fromARGB(255, 18, 153, 137),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.elliptical(
+                        MediaQuery.of(context).size.width, 160),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 70.0),
-              child: Column(
-                children: [
-                  Center(
-                    child: Text(
-                      "SignUp",
-                      style: TextStyle(
-                          fontSize: 25.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.only(top: 70.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: Text(
+                        "SignUp",
+                        style: TextStyle(
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                  Center(
-                    child: Text(
-                      "Create a new Account",
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          color: const Color.fromARGB(255, 252, 255, 188),
-                          fontWeight: FontWeight.w500),
+                    Center(
+                      child: Text(
+                        "Create a new Account",
+                        style: TextStyle(
+                            fontSize: 18.0,
+                            color: const Color.fromARGB(255, 252, 255, 188),
+                            fontWeight: FontWeight.w500),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20.0),
-                  Container(
-                    margin: EdgeInsets.symmetric(
-                        vertical: 20.0, horizontal: 20.0),
-                    child: Material(
-                      elevation: 5.0,
-                      borderRadius: BorderRadius.circular(10),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 20.0, horizontal: 20.0),
-                        height: MediaQuery.of(context).size.height / 1.7,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              buildInputField(
-                                "Name",
-                                namecontroller,
-                                Icons.person,
-                                "Please enter your name",
-                              ),
-                              SizedBox(height: 10.0),
-                              buildInputField(
-                                "Email",
-                                mailcontroller,
-                                Icons.mail,
-                                "Please enter your email",
-                              ),
-                              SizedBox(height: 10.0),
-                              buildInputField(
-                                "Password",
-                                passwordcontroller,
-                                Icons.lock,
-                                "Please enter your password",
-                                obscureText: true,
-                              ),
-                              SizedBox(height: 10.0),
-                              buildInputField(
-                                "Confirm Password",
-                                confirmPasswordcontroller,
-                                Icons.lock,
-                                "Please confirm your password",
-                                obscureText: true,
-                              ),
-                              SizedBox(height: 20.0),
-                              GestureDetector(
-                                onTap: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    setState(() {
-                                      email = mailcontroller.text;
-                                      name = namecontroller.text;
-                                      password = passwordcontroller.text;
-                                      confirmPassword =
-                                          confirmPasswordcontroller.text;
-                                    });
-                                    registration();
-                                  }
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: 100,
-                                    padding: EdgeInsets.all(10.0),
-                                    decoration: BoxDecoration(
-                                      color: const Color.fromARGB(
-                                          255, 205, 243, 161),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        "SignUp",
-                                        style: TextStyle(
-                                            color: const Color.fromARGB(
-                                                255, 67, 61, 61),
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.w500),
+                    SizedBox(height: 20.0),
+                    Container(
+                      margin: EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 20.0),
+                      child: Material(
+                        elevation: 5.0,
+                        borderRadius: BorderRadius.circular(10),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 20.0, horizontal: 20.0),
+                          height: MediaQuery.of(context).size.height / 1.7,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                buildInputField(
+                                  "Name",
+                                  namecontroller,
+                                  Icons.person,
+                                  "Please enter your name",
+                                ),
+                                SizedBox(height: 10.0),
+                                buildInputField(
+                                  "Email",
+                                  mailcontroller,
+                                  Icons.mail,
+                                  "Please enter your email",
+                                ),
+                                SizedBox(height: 10.0),
+                                buildInputField(
+                                  "Password",
+                                  passwordcontroller,
+                                  Icons.lock,
+                                  "Please enter your password",
+                                  obscureText: true,
+                                ),
+                                SizedBox(height: 10.0),
+                                buildInputField(
+                                  "Confirm Password",
+                                  confirmPasswordcontroller,
+                                  Icons.lock,
+                                  "Please confirm your password",
+                                  obscureText: true,
+                                ),
+                                SizedBox(height: 20.0),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() {
+                                        email = mailcontroller.text;
+                                        name = namecontroller.text;
+                                        password = passwordcontroller.text;
+                                        confirmPassword =
+                                            confirmPasswordcontroller.text;
+                                      });
+                                      registration();
+                                    }
+                                  },
+                                  child: Center(
+                                    child: Container(
+                                      width: 100,
+                                      padding: EdgeInsets.all(10.0),
+                                      decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 205, 243, 161),
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "SignUp",
+                                          style: TextStyle(
+                                              color: const Color.fromARGB(
+                                                  255, 67, 61, 61),
+                                              fontSize: 16.0,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              SizedBox(height: 10.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Already have an account? ",
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin()));
-                                    },
-                                    child: Text(
-                                      "SignIn",
+                                SizedBox(height: 10.0),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Already have an account? ",
                                       style: TextStyle(
-                                          color: const Color.fromARGB(
-                                              255, 63, 159, 227),
+                                          color: Colors.black,
                                           fontSize: 14.0,
                                           fontWeight: FontWeight.bold),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    GestureDetector(
+                                      onTap: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Signin()));
+                                      },
+                                      child: Text(
+                                        "SignIn",
+                                        style: TextStyle(
+                                            color: const Color.fromARGB(
+                                                255, 63, 159, 227),
+                                            fontSize: 14.0,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

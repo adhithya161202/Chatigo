@@ -162,160 +162,163 @@ userLogin() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true, 
       body:
-      Container(
-        child: 
-        Stack(//overlap 2 widgets
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height/4.0,
-            width: MediaQuery.of(context).size.width, //mediaQuery= highlyresponsive
-
-            decoration: BoxDecoration(
-              gradient : LinearGradient(colors: [const Color.fromARGB(255, 174, 176, 39),const Color.fromARGB(255, 18, 153, 137)],begin: Alignment.topLeft ,end: Alignment.bottomRight ),
-              borderRadius: BorderRadius.vertical(bottom: Radius.elliptical(MediaQuery.of(context).size.width, 160))
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top:70.0),
-            child: Column(children: [
-              Center(child: Text("SignIn",style: TextStyle(fontSize: 25.0,color:Colors.white,fontWeight:FontWeight.bold ),
-              )),
-            Center(
-              child: Text(
-                "Login to your account",
-                style: TextStyle(fontSize: 18.0,color:const Color.fromARGB(255, 252, 255, 188),fontWeight:FontWeight.w500 
+      SingleChildScrollView(
+        child: Container(
+          child: 
+          Stack(//overlap 2 widgets
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height/4.0,
+              width: MediaQuery.of(context).size.width, //mediaQuery= highlyresponsive
+        
+              decoration: BoxDecoration(
+                gradient : LinearGradient(colors: [const Color.fromARGB(255, 174, 176, 39),const Color.fromARGB(255, 18, 153, 137)],begin: Alignment.topLeft ,end: Alignment.bottomRight ),
+                borderRadius: BorderRadius.vertical(bottom: Radius.elliptical(MediaQuery.of(context).size.width, 160))
               ),
-            )
-           ),
-          SizedBox(height: 20.0,),
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
-            child: Material(
-              elevation: 5.0,
-              borderRadius: BorderRadius.circular(10),
-               child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20.0,horizontal:20.0),
-                height: MediaQuery.of(context).size.height/2.0 ,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(10),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top:70.0),
+              child: Column(children: [
+                Center(child: Text("SignIn",style: TextStyle(fontSize: 25.0,color:Colors.white,fontWeight:FontWeight.bold ),
+                )),
+              Center(
+                child: Text(
+                  "Login to your account",
+                  style: TextStyle(fontSize: 18.0,color:const Color.fromARGB(255, 252, 255, 188),fontWeight:FontWeight.w500 
                 ),
-               child:Form(
-                key: _formkey,
-                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Email",style: TextStyle(color: Colors.black,fontSize: 18.0,fontWeight: FontWeight.w500 )  ,),
-                    SizedBox(height: 10.0,),
-                    Container(
-                      // padding: EdgeInsets.only(left: 10.0),
-                      decoration: BoxDecoration(border: Border.all(width:1.0,color: Colors.black38 )),
-                      child: TextFormField(
-                        controller: usermailcontroller,
-                        validator: (value){
-                          if(value==null ||value.isEmpty){
-                            return "please enter email";
-                          }
-                          return null;
-                        } ,
-                        decoration: InputDecoration(border: InputBorder.none,prefixIcon: Icon(Icons.mail_outline,color: const Color.fromARGB(255, 73, 189, 148),),) ,
-                      ),
-                    ),
-                    Text(
-                      "Password",
-                      style: TextStyle(color: Colors.black,fontSize: 18.0,fontWeight: FontWeight.w500 )  ,),
-                    SizedBox(height: 10.0,),
-                    Container(
-                      // padding: EdgeInsets.only(left: 10.0),
-                      decoration: BoxDecoration(border: Border.all(width:1.0,color: Colors.black38 )),
-                       child: TextFormField(
-                        controller: userpasswordcontroller,
-                        validator: (value){
-                          if(value==null ||value.isEmpty){
-                            return "please enter password";
-                          }
-                          return null;
-                        } ,
-                        decoration: InputDecoration(border: InputBorder.none,prefixIcon: Icon(Icons.lock_clock_outlined,color: Colors.blue,),
-                        ) ,
-                        obscureText: true,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomRight,
-                      child: GestureDetector(
-                         onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgotpassword()));
-                      },
-                      
-                        child: Text("Forgot password?",style: TextStyle(color: const Color.fromARGB(255, 73, 128, 224),fontSize: 14.0,fontWeight: FontWeight.w500 ),
+              )
+             ),
+            SizedBox(height: 20.0,),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 20.0,horizontal: 20.0),
+              child: Material(
+                elevation: 5.0,
+                borderRadius: BorderRadius.circular(10),
+                 child: Container(
+                padding: EdgeInsets.symmetric(vertical: 20.0,horizontal:20.0),
+                  height: MediaQuery.of(context).size.height/2.0 ,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.white, borderRadius: BorderRadius.circular(10),
+                  ),
+                 child:Form(
+                  key: _formkey,
+                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Email",style: TextStyle(color: Colors.black,fontSize: 18.0,fontWeight: FontWeight.w500 )  ,),
+                      SizedBox(height: 10.0,),
+                      Container(
+                        // padding: EdgeInsets.only(left: 10.0),
+                        decoration: BoxDecoration(border: Border.all(width:1.0,color: Colors.black38 )),
+                        child: TextFormField(
+                          controller: usermailcontroller,
+                          validator: (value){
+                            if(value==null ||value.isEmpty){
+                              return "please enter email";
+                            }
+                            return null;
+                          } ,
+                          decoration: InputDecoration(border: InputBorder.none,prefixIcon: Icon(Icons.mail_outline,color: const Color.fromARGB(255, 73, 189, 148),),) ,
                         ),
-                      )
                       ),
-                      SizedBox(height: 40.0),
-                    GestureDetector(
-                      onTap: (){
-                          
-                        if(_formkey.currentState!.validate()){
-                          setState(() {
-                            email=usermailcontroller.text;
-                            password=userpasswordcontroller.text;
-                          });
-                        }
-                        userLogin();
-                      },
-                        child: Center(
-                          child: Container(
-                            width: 100,
-                            child: Material(
-                              elevation:5.0 ,
-                              borderRadius: BorderRadius.circular(10),
-
-                                child: Container(
-                                                   padding: EdgeInsets.all(10.0),
-                                                   decoration: BoxDecoration(color: const Color.fromARGB(255, 205, 243, 161),
-                                                   borderRadius: BorderRadius.circular(10),),
-                                child: Center(
-                                  child: Text("SignIn",
-                                  style: TextStyle(color: const Color.fromARGB(255, 67, 61, 61),
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.w500 ),
+                      Text(
+                        "Password",
+                        style: TextStyle(color: Colors.black,fontSize: 18.0,fontWeight: FontWeight.w500 )  ,),
+                      SizedBox(height: 10.0,),
+                      Container(
+                        // padding: EdgeInsets.only(left: 10.0),
+                        decoration: BoxDecoration(border: Border.all(width:1.0,color: Colors.black38 )),
+                         child: TextFormField(
+                          controller: userpasswordcontroller,
+                          validator: (value){
+                            if(value==null ||value.isEmpty){
+                              return "please enter password";
+                            }
+                            return null;
+                          } ,
+                          decoration: InputDecoration(border: InputBorder.none,prefixIcon: Icon(Icons.lock_clock_outlined,color: Colors.blue,),
+                          ) ,
+                          obscureText: true,
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomRight,
+                        child: GestureDetector(
+                           onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Forgotpassword()));
+                        },
+                        
+                          child: Text("Forgot password?",style: TextStyle(color: const Color.fromARGB(255, 73, 128, 224),fontSize: 14.0,fontWeight: FontWeight.w500 ),
+                          ),
+                        )
+                        ),
+                        SizedBox(height: 40.0),
+                      GestureDetector(
+                        onTap: (){
+                            
+                          if(_formkey.currentState!.validate()){
+                            setState(() {
+                              email=usermailcontroller.text;
+                              password=userpasswordcontroller.text;
+                            });
+                          }
+                          userLogin();
+                        },
+                          child: Center(
+                            child: Container(
+                              width: 100,
+                              child: Material(
+                                elevation:5.0 ,
+                                borderRadius: BorderRadius.circular(10),
+        
+                                  child: Container(
+                                                     padding: EdgeInsets.all(10.0),
+                                                     decoration: BoxDecoration(color: const Color.fromARGB(255, 205, 243, 161),
+                                                     borderRadius: BorderRadius.circular(10),),
+                                  child: Center(
+                                    child: Text("SignIn",
+                                    style: TextStyle(color: const Color.fromARGB(255, 67, 61, 61),
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w500 ),
+                                      ),
+                                      )
                                     ),
-                                    )
-                                  ),
-                                
+                                  
+                                ),
                               ),
-                            ),
-                            ),
-                      ),
-                        ],
+                              ),
                         ),
-               ),
+                          ],
+                          ),
+                 ),
+                      ),
                     ),
                   ),
-                ),
-               // SizedBox(height: 5.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Dont have an account? ",style: TextStyle(color: Colors.black,fontSize: 14.0,fontWeight: FontWeight.bold)
-                    ),
-                    
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
-                      },
+                 // SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Dont have an account? ",style: TextStyle(color: Colors.black,fontSize: 14.0,fontWeight: FontWeight.bold)
+                      ),
                       
-                      
-                      child: Text("SignUp",style: TextStyle(color: const Color.fromARGB(255, 63, 159, 227),fontSize: 14.0,fontWeight: FontWeight.bold))
-                      )
-                  ],
-                ),
-              ],
-            ),  
-           )
-          ],
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>Signup()));
+                        },
+                        
+                        
+                        child: Text("SignUp",style: TextStyle(color: const Color.fromARGB(255, 63, 159, 227),fontSize: 14.0,fontWeight: FontWeight.bold))
+                        )
+                    ],
+                  ),
+                ],
+              ),  
+             )
+            ],
+          ),
         ),
       ),
     );

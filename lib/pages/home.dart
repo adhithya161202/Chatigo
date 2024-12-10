@@ -1,4 +1,5 @@
 import 'package:chatapp/pages/chatpage.dart';
+import 'package:chatapp/pages/signin.dart';
 import 'package:chatapp/service/database.dart';
 import 'package:chatapp/service/shared_pref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -35,31 +36,6 @@ class _HomeState extends State<Home> {
     });
  }
 
-
-//updated 
-// Widget ChatRoomList() {
-//   return StreamBuilder(
-//     stream: chatRoomsStream,
-//     builder: (context, AsyncSnapshot snapshot) {
-//       return snapshot.hasData
-//           ? Expanded( // Ensure the ListView gets layout constraints
-//               child: ListView.builder(
-//                 itemCount: snapshot.data.docs.length,
-//                 itemBuilder: (context, index) {
-//                   DocumentSnapshot ds = snapshot.data.docs[index];
-//                   return _ChatRoomListTile(
-//                     chatRoomId: ds.id,
-//                     lastMessage: ds["lastMessage"],
-//                     myUserName: myUserName!,
-//                     time: ds["lastMessageSendTs"],
-//                   );
-//                 },
-//               ),
-//             )
-//           : Center(child: CircularProgressIndicator());
-//     },
-//   );
-// }
 Widget ChatRoomList() {
   return StreamBuilder(
     stream: chatRoomsStream,
@@ -132,12 +108,12 @@ initiateSearch(String value) {
 
     var capitalizedValue = value.substring(0, 1).toUpperCase() + value.substring(1);
 
-    // Query the database for each change in the input
+ 
     DatabaseMethods().Search(capitalizedValue).then((QuerySnapshot docs) {
       setState(() {
         queryResultSet = docs.docs.map((doc) => doc.data()).toList();
         
-        // Filter the results dynamically based on the input value
+        
         tempSearchStore = queryResultSet.where((element) {
           return element['username'].toString().toLowerCase().startsWith(value.toLowerCase());
         }).toList();
@@ -150,107 +126,110 @@ initiateSearch(String value) {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 20, 130, 117),
+   
       body: Column(
+  children: [
+    Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0, bottom: 15.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                search
-                    ? Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                            color: const Color.fromRGBO(248, 253, 237, 1),
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(0, 2),
-                                blurRadius: 4,
-                              ),
-                            ],
-                          ),
-                          child: TextField(
-                            onChanged: (value) {
-                              initiateSearch(value);
-                            },
-                            decoration: const InputDecoration(
-                              border: InputBorder.none,
-                              hintText: 'Search User',
-                              contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                              hintStyle: TextStyle(
-                                color: Color.fromARGB(255, 199, 199, 197),
-                                fontSize: 20.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                      )
-                    : const Text(
-                        "ChatiGo",
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 245),
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.w500,
+          search
+              ? Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 252, 253, 251),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: TextField(
+                      onChanged: (value) {
+                        initiateSearch(value);
+                      },
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Search User',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        hintStyle: TextStyle(
+                          color: Color.fromARGB(255, 199, 199, 197),
+                          fontSize: 20.0,
                         ),
                       ),
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      search = !search; // Toggle the search state
-                    });
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    child: Icon(
-                      search ? Icons.close_rounded : Icons.search_rounded,
-                      color: Colors.white,
                     ),
                   ),
+                )
+              : const Text(
+                  "ChatiGo",
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 245),
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ],
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                search = !search;
+              });
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Icon(
+                search ? Icons.close_rounded : Icons.search_rounded,
+                color: Colors.white,
+              ),
             ),
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 20.0),
-              width: MediaQuery.of(context).size.width,
-              height: search? MediaQuery.of(context).size.height/1.9
-              :MediaQuery.of(context).size.height/1.2,
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(248, 253, 237, 1),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-              ),
-              child: Column(
-                children: [
-                  search
-                      ? Expanded(
-                        child: ListView(
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                            children: tempSearchStore.map((element) {
-                              return buildResultCard(element);
-                            }).toList(),
-                          ),
-                      )
-                      : ChatRoomList(),
-                ],
-              ),
+        ],
+      ),
+    ),
+    Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0), // Reduced padding
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(248, 253, 237, 1),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
         ),
-          )
-      ],
-      )
-    );
+        child: search
+            ? ListView(
+                children: tempSearchStore.map((element) {
+                  return buildResultCard(element);
+                }).toList(),
+              )
+            : ChatRoomList(),
+      ),
+    ),
+  ],
+),
+
+
+    floatingActionButton: FloatingActionButton(
+      onPressed: () async {
+
+        await SharedPreferenceHelper().clearAll(); 
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Logout Successfully'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Signin()),
+        );
+      },
+      tooltip: 'Logout',
+      backgroundColor: const Color.fromARGB(255, 54, 160, 139),
+      child: const Icon(Icons.logout),
+    ),
+    floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+  );
+
+    
   }
 
   Widget buildResultCard(data) {
@@ -266,14 +245,14 @@ initiateSearch(String value) {
         };
 
        await DatabaseMethods().createChatRoom(ChatRoomId, chatRoomInfoMap);
-        //await initiateChat(myUserName!, data["username"]);
+        
 
          Navigator.push(context,MaterialPageRoute(builder: 
          (context) =>  Chatpage(name: data["Name"],profileurl: data["photo"],username: data["username"],
          )));
       },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         child: Material(
           elevation: 5.0,
           borderRadius: BorderRadius.circular(10),
